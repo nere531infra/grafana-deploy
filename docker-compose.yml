@@ -3,7 +3,7 @@ services:
   prometheus:
     image: prom/prometheus:v3.2.1
     hostname: prometheus
-    container_name: centralgrafana__prometheus
+    container_name: grafana__prometheus
     restart: unless-stopped
 
     volumes:
@@ -31,13 +31,13 @@ services:
     deploy:
       resources:
         limits:
-          memory: 4096m
+          memory: 256m
 
 
   victoriametrics:
     image: victoriametrics/victoria-metrics:v1.115.0
     hostname: victoriametrics
-    container_name: centralgrafana__victoriametrics
+    container_name: grafana__victoriametrics
     restart: unless-stopped
 
     volumes:
@@ -55,13 +55,13 @@ services:
     deploy:
       resources:
         limits:
-          memory: 4096m
+          memory: 128m
 
 
   grafana:
     image: grafana/grafana-oss:11.6.0
     hostname: grafana
-    container_name: centralgrafana__grafana
+    container_name: grafana__grafana
     restart: unless-stopped
 
     environment:
@@ -77,8 +77,8 @@ services:
         target: /var/lib/grafana
 
     networks:
-      internal:
-      outband:
+      - internal
+      - outband
 
     deploy:
       resources:
@@ -88,7 +88,7 @@ services:
   cloudflared:
     image: cloudflare/cloudflared:2025.4.0-arm64@sha256:d87b1096195bb6e1104d3c5414efdb65bbe53598909a3e08d766b8adbb32d06a
     hostname: cloudflared
-    container_name: centralgrafana__cloudflared
+    container_name: grafana__cloudflared
     restart: unless-stopped
 
     environment:
@@ -97,8 +97,8 @@ services:
     command: tunnel run --token ${TUNNEL_TOKEN}
 
     networks:
-      internal:
-      outband:
+      - internal
+      - outband
 
     deploy:
       resources:
@@ -107,18 +107,18 @@ services:
 
 volumes:
   prometheus_data:
-    name: centralgrafana__prometheus_data
+    name: grafana__prometheus_data
 
   victoriametrics_data:
-    name: centralgrafana__victoriametrics_data
+    name: grafana__victoriametrics_data
 
   grafana_data:
-    name: centralgrafana__grafana_data
+    name: grafana__grafana_data
 
 networks:
   internal:
-    name: centralgrafana__internal
+    name: grafana__internal
     internal: true
 
   outband:
-    name: centralgrafana__outband
+    name: grafana__outband

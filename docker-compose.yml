@@ -33,30 +33,25 @@ services:
         limits:
           memory: 256m
 
-
-  victoriametrics:
-    image: victoriametrics/victoria-metrics:v1.115.0
-    hostname: victoriametrics
-    container_name: grafana__victoriametrics
+  node-exporter:
+    image: prom/node-exporter:v1.7.0
+    hostname: node-exporter
+    container_name: grafana__node-exporter
     restart: unless-stopped
-
-    volumes:
-      - type: volume
-        source: victoriametrics_data
-        target: /victoria-metrics-data
-
     command:
-      - '-retentionPeriod=1y'
-      - '-maxLabelsPerTimeseries=60'
-
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
     networks:
       - internal
-
     deploy:
       resources:
         limits:
           memory: 128m
-
 
   grafana:
     image: grafana/grafana-oss:11.6.0
@@ -106,9 +101,6 @@ services:
 volumes:
   prometheus_data:
     name: grafana__prometheus_data
-
-  victoriametrics_data:
-    name: grafana__victoriametrics_data
 
   grafana_data:
     name: grafana__grafana_data

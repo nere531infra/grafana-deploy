@@ -54,7 +54,7 @@ services:
           memory: 128m
 
   grafana:
-    image: grafana/grafana-oss:11.6.0
+    image: grafana/grafana-oss:11.6.1
     hostname: grafana
     container_name: grafana__grafana
     restart: unless-stopped

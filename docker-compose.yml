@@ -34,7 +34,7 @@ services:
           memory: 256m
 
   node-exporter:
-    image: prom/node-exporter:v1.7.0
+    image: prom/node-exporter:v1.9.1
     hostname: node-exporter
     container_name: grafana__node-exporter
     restart: unless-stopped
